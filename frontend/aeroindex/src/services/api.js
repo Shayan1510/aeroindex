@@ -1,7 +1,8 @@
-// Every mock service function is wrapped through here so that later, when a
-// real backend exists, the delay() + resolve pattern becomes a plain fetch()
-// call and nothing in any page/component needs to change — they already
-// treat every service call as async.
+// Every service function is wrapped through here so that swapping between
+// mock data and the real backend never touches any page/component — they
+// already treat every service call as async.
+
+export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
 
 const MOCK_LATENCY_MS = 350;
 
@@ -11,4 +12,16 @@ export function resolveMock(data) {
   });
 }
 
-// export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
+/**
+ * Fetches JSON from the real backend.
+ * @param {string} path - path relative to API_BASE, e.g. "/flights?from=DEL&to=BOM&date=2026-01-01"
+ * @param {RequestInit} [options]
+ */
+export async function fetchJson(path, options) {
+  const res = await fetch(`${API_BASE}${path}`, options);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`API ${res.status} ${res.statusText}: ${body}`);
+  }
+  return res.json();
+}
