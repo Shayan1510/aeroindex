@@ -1,11 +1,9 @@
-import { resolveMock } from "./api.js";
-import { ROUTE_BASKET } from "../mock/routeBasket.js";
-import { AUDIT_LOG } from "../mock/analytics.js";
+import { fetchJson } from "./api.js";
 
 export async function getRouteBasket() {
-  return resolveMock(ROUTE_BASKET);
+  return fetchJson(`/admin/routes`);
 }
 
 export async function getAuditLog() {
-  return resolveMock(AUDIT_LOG);
+  return fetchJson(`/audit`);
 }
