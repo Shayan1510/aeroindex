@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body bg-base-light text-ink-light dark:bg-base-dark dark:text-ink-dark antialiased;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-brass/30;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme(colors.signal.DEFAULT);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Data figures — the signature treatment: tabular mono numerals for every
+     index value, fare, and percentage, styled like a departure-board readout. */
+  .figure {
+    @apply font-mono tabular-nums tracking-tight;
+  }
+
+  .glass {
+    @apply bg-white/70 dark:bg-surface-dark2/60 backdrop-blur-md border border-border-light dark:border-border-dark shadow-glassLight dark:shadow-glass;
+  }
+
+  .card {
+    @apply rounded-xl2 border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark2;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute dark:text-ink-darkMute;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink-light dark:bg-ink-dark text-white dark:text-ink-light px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-border-light dark:border-border-dark px-5 py-2.5 text-sm font-medium hover:bg-surface-light2 dark:hover:bg-surface-dark2 transition-colors;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-surface-light2 dark:bg-surface-dark rounded-lg;
+  }
+}
