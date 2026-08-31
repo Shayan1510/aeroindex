@@ -1,36 +1,23 @@
-import { resolveMock } from "./api.js";
-import {
-  NATIONAL_INDEX,
-  INDEX_DECOMPOSITION,
-  BOOKING_WINDOWS,
-  ROUTE_INDEX_LEVELS,
-  generateBookingWindowFares,
-  generateIndexSeries,
-} from "../mock/indexData.js";
+import { fetchJson } from "./api.js";
 
 export async function getAirfareIndex() {
-  return resolveMock(NATIONAL_INDEX);
+  return fetchJson(`/index`);
 }
 
 export async function getRouteIndex(route = "DEL-BOM") {
-  return resolveMock({
-    route,
-    series: generateIndexSeries(`route-${route}`, 90, 120),
-  });
+  const qs = new URLSearchParams({ route });
+  return fetchJson(`/index/route?${qs.toString()}`);
 }
 
 export async function getIndexDecomposition() {
-  return resolveMock(INDEX_DECOMPOSITION);
+  return fetchJson(`/index/decomposition`);
 }
 
 export async function getBookingWindowFares(route = "DEL-BOM") {
-  return resolveMock({
-    route,
-    windows: BOOKING_WINDOWS,
-    data: generateBookingWindowFares(route),
-  });
+  const qs = new URLSearchParams({ route });
+  return fetchJson(`/index/booking-window?${qs.toString()}`);
 }
 
 export async function getIndexLevels() {
-  return resolveMock(ROUTE_INDEX_LEVELS);
+  return fetchJson(`/index/levels`);
 }
