@@ -1,23 +1,21 @@
-import { resolveMock } from "./api.js";
-import { SOURCE_HEALTH, DATA_QUALITY_SCORE } from "../mock/dataQuality.js";
-import { ANOMALIES, FORECAST, CPI_IMPACT, BACKTEST_RESULT } from "../mock/analytics.js";
+import { fetchJson } from "./api.js";
 
 export async function getDataQuality() {
-  return resolveMock({ sources: SOURCE_HEALTH, score: DATA_QUALITY_SCORE });
+  return fetchJson(`/data-quality`);
 }
 
 export async function getAnomalies() {
-  return resolveMock(ANOMALIES);
+  return fetchJson(`/anomalies`);
 }
 
 export async function getForecast() {
-  return resolveMock(FORECAST);
+  return fetchJson(`/forecast`);
 }
 
 export async function getCpiImpact() {
-  return resolveMock(CPI_IMPACT);
+  return fetchJson(`/cpi-impact`);
 }
 
 export async function getBacktest() {
-  return resolveMock(BACKTEST_RESULT);
+  return fetchJson(`/backtest`);
 }
