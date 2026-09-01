@@ -97,7 +97,7 @@ def flight_detail(flight_id: str, db: Session = Depends(get_db)):
     parts = flight_id.split("-")
     if len(parts) >= 4:
         origin, dest, day = parts[1][:3], parts[1][3:], "-".join(parts[3:])
-        flights = demo_flights(origin, dest, day, 8)
+        flights = demo_flights(origin, dest, day, 20)
         return next((x for x in flights if x["id"] == flight_id), flights[0])
     raise HTTPException(404, "Flight not found")
 
