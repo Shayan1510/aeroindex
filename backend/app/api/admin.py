@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
+from datetime import date, timedelta
 from ..db import get_db
 from ..models import RouteBasket, AuditLog
 from ..schemas import RouteUpsert
+from ..services.index_engine import rebuild_index_history
 
 router=APIRouter(prefix="/api/v1/admin",tags=["admin"])
 
@@ -35,3 +37,10 @@ def delete_route(route:str, db:Session=Depends(get_db)):
     r.status="retired"
     db.commit()
     return {"ok":True}
+
+@router.post("/reseed-index")
+def reseed_index(db: Session = Depends(get_db)):
+    end = date.today()
+    start = end - timedelta(days=180)
+    rebuild_index_history(db, start, end)
+    return {"ok": True, "message": f"Rebuilt index from {start} to {end}"}
