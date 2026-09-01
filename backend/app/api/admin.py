@@ -6,14 +6,11 @@ from ..db import get_db
 from ..models import RouteBasket, AuditLog
 from ..schemas import RouteUpsert
 from ..services.index_engine import rebuild_index_history
-
 router=APIRouter(prefix="/api/v1/admin",tags=["admin"])
-
 @router.get("/routes")
 def list_routes(db:Session=Depends(get_db)):
     rows=db.execute(select(RouteBasket).order_by(RouteBasket.weight_pct.desc())).scalars().all()
     return [{"route":r.route,"weightPct":r.weight_pct,"status":r.status,"effectiveDate":r.effective_date,"version":r.version} for r in rows]
-
 @router.post("/routes")
 def add_route(body:RouteUpsert, db:Session=Depends(get_db)):
     if db.get(RouteBasket, body.route):
@@ -21,7 +18,6 @@ def add_route(body:RouteUpsert, db:Session=Depends(get_db)):
     r=RouteBasket(route=body.route,weight_pct=body.weightPct,status=body.status,effective_date=body.effectiveDate,version=body.version)
     db.add(r); db.commit()
     return {"ok":True,"route":body.route}
-
 @router.put("/routes/{route}")
 def update_route(route:str, body:RouteUpsert, db:Session=Depends(get_db)):
     r=db.get(RouteBasket, route)
@@ -29,7 +25,6 @@ def update_route(route:str, body:RouteUpsert, db:Session=Depends(get_db)):
     r.weight_pct=body.weightPct; r.status=body.status; r.effective_date=body.effectiveDate; r.version=body.version
     db.commit()
     return {"ok":True}
-
 @router.delete("/routes/{route}")
 def delete_route(route:str, db:Session=Depends(get_db)):
     r=db.get(RouteBasket,route)
@@ -37,10 +32,10 @@ def delete_route(route:str, db:Session=Depends(get_db)):
     r.status="retired"
     db.commit()
     return {"ok":True}
-
 @router.post("/reseed-index")
 def reseed_index(db: Session = Depends(get_db)):
     end = date.today()
     start = end - timedelta(days=180)
     rebuild_index_history(db, start, end)
+    db.commit()
     return {"ok": True, "message": f"Rebuilt index from {start} to {end}"}
